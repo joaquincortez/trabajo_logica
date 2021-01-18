@@ -4,6 +4,8 @@ from .forms import CalculosForm
 from rest_framework import viewsets          
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
+import json
+from .calculos import producto, calcular_total
 
 
 def index(request):
@@ -14,6 +16,11 @@ def optimizacion(request):
 
 def calculos(request):
     if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print(body)
+        resultado = calcular_total(body)
+        print(producto(5,6))
         return HttpResponse('hola xdxxd')
 
 

@@ -7,8 +7,17 @@ axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 class Resultados extends React.Component{
 
+    constructor(props){
+        super(props)
+        this.state = {
+          datos: [],
+        }
+    }
+
     usarQuery() {
-        return new URLSearchParams(useLocation().search);
+        const search = window.location.href; // could be '?foo=bar'
+        let params =  new URLSearchParams(search)
+        return params;
     }
 
     enviarRequest(sabores){
@@ -21,22 +30,22 @@ class Resultados extends React.Component{
 
     }
 
-    hacerRequest(){
-        let x;
+    hacerRequest = (info) => {
         axios
-        .post("http://localhost:8000/calculos/")
-        .then(res => {x = res.data})
-        .catch(err => {x = err});
-        console.log("x es " +x);
-        return x;
+        .post("http://localhost:8000/calculos/", info)
+        .then(res => {
+            console.log(res);
+            this.setState({ datos: res.data })})
+        .catch(err => {console.log(err)});
     }
 
-    render(){
+    componentDidMount(){
         let query = this.usarQuery();
         let parametros = Array.from(query.entries());
         let sabores = {};
         let materias = {}
-        console.log(parametros);
+        parametros[0][0] = "sabor1"; //porque devuelve como primero toda la url
+        console.log("parametros son", parametros);
         let i =0;
         for(i; i<parametros.length-1; i+=2){
             console.log("sabor".localeCompare(parametros[i][0].substring(0,5)) === 0)
@@ -54,14 +63,19 @@ class Resultados extends React.Component{
             materias[parametros[i][1]] = parametros[i+1][1];
         }
         
-        console.log(sabores);
-        console.log(materias);
+        console.log("sabores son", sabores);
+        console.log("materias son",materias);
         const res = this.hacerRequest(sabores);
         console.log(res);
+        this.hacerRequest(sabores)
+    }
+
+    render(){  
         return(
             <div>
+                {console.log("Renderizando...")}
                 <h1>Se muestran los resultados para la url</h1>
-                <p>{res}</p>
+                <p> datos son {this.state.datos}</p>
             </div>
         )
     }
