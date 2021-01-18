@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
 import json
-from .calculos import producto, calcular_total
+from .calculos import producto, calcular_precios_helado, calcular_precios_materia
 
 
 def index(request):
@@ -14,14 +14,23 @@ def index(request):
 def optimizacion(request):
     return render(request, 'optimizacion/optimizacion.html')
 
-def calculos(request):
+def calculos_helado(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         print(body)
-        resultado = calcular_total(body)
-        print(producto(5,6))
-        return HttpResponse('hola xdxxd')
+        resultado = calcular_precios_helado(body)
+        print(resultado)
+        return JsonResponse(resultado)
+
+def calculos_materia(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        print(body)
+        resultado = calcular_precios_materia(body)
+        print(resultado)
+        return JsonResponse(resultado)
 
 
 class HeladoView(viewsets.ModelViewSet):

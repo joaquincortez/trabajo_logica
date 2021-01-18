@@ -4,7 +4,7 @@ import SeccionRadio from './SeccionRadio';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/optimizacion.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faIceCream, faChartLine, faBox, faBoxes, faCalculator, faCode } from '@fortawesome/free-solid-svg-icons'
+import { faIceCream, faChartLine, faBox, faBoxes, faCalculator,  } from '@fortawesome/free-solid-svg-icons'
 
 
 

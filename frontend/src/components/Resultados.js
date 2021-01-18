@@ -10,7 +10,8 @@ class Resultados extends React.Component{
     constructor(props){
         super(props)
         this.state = {
-          datos: [],
+          datosHelado: [],
+          datosMateria: [],
         }
     }
 
@@ -30,19 +31,28 @@ class Resultados extends React.Component{
 
     }
 
-    hacerRequest = (info) => {
+    requestHelado = (info) => {
         axios
-        .post("http://localhost:8000/calculos/", info)
+        .post("http://localhost:8000/calculoshelado/", info)
         .then(res => {
             console.log(res);
-            this.setState({ datos: res.data })})
+            this.setState({ datosHelado: Object.keys(res.data).map((key) => [key, res.data[key]]) })})
+        .catch(err => {console.log(err)});
+    }
+
+    requestMateria = (info) => {
+        axios
+        .post("http://localhost:8000/calculosmateria/", info)
+        .then(res => {
+            console.log(res);
+            this.setState({ datosMateria: Object.keys(res.data).map((key) => [key, res.data[key]]) })})
         .catch(err => {console.log(err)});
     }
 
     componentDidMount(){
         let query = this.usarQuery();
         let parametros = Array.from(query.entries());
-        let sabores = {};
+        let helados = {};
         let materias = {}
         parametros[0][0] = "sabor1"; //porque devuelve como primero toda la url
         console.log("parametros son", parametros);
@@ -51,7 +61,7 @@ class Resultados extends React.Component{
             console.log("sabor".localeCompare(parametros[i][0].substring(0,5)) === 0)
             if("sabor".localeCompare(parametros[i][0].substring(0,5)) === 0){
                 console.log('entro');
-                sabores[parametros[i][1]] = parametros[i+1][1];
+                helados[parametros[i][1]] = parametros[i+1][1];
                 console.log(parametros[i][1] + " " + parametros[i+1][1])
             }
             else
@@ -63,19 +73,27 @@ class Resultados extends React.Component{
             materias[parametros[i][1]] = parametros[i+1][1];
         }
         
-        console.log("sabores son", sabores);
+        console.log("sabores son", helados);
         console.log("materias son",materias);
-        const res = this.hacerRequest(sabores);
-        console.log(res);
-        this.hacerRequest(sabores)
+        const resHelado = this.requestHelado(helados);
+        console.log(resHelado);
+        const resMateria = this.requestMateria(materias);
+        console.log(resMateria);
     }
 
     render(){  
+        console.log(this.state.datosMateria);
         return(
             <div>
                 {console.log("Renderizando...")}
-                <h1>Se muestran los resultados para la url</h1>
-                <p> datos son {this.state.datos}</p>
+                <h2>Presupuesto en helados</h2>
+                {this.state.datosHelado.map(elem => 
+                    <li>Total en {elem[0]} es ${elem[1]}</li>
+                    )}
+                <h2>Presupuesto en materias primas</h2>
+                {this.state.datosMateria.map(elem => 
+                    <li>Total en {elem[0]} es ${elem[1]}</li>
+                    )}
             </div>
         )
     }
