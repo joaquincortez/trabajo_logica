@@ -1,11 +1,11 @@
 import React from 'react';
 import SeccionForm from './SeccionForm';
 import SeccionRadio from './SeccionRadio';
+import Encabezado from './Encabezado';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/optimizacion.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faIceCream, faChartLine, faBox, faBoxes, faCalculator,  } from '@fortawesome/free-solid-svg-icons'
-
+import { faIceCream, faChartLine, faBox, faBoxes, faCalculator, faCode } from '@fortawesome/free-solid-svg-icons'
 
 
 class FormOptimizacion extends React.Component{
@@ -22,6 +22,7 @@ class FormOptimizacion extends React.Component{
     render(){
         return(
             <div>
+                <Encabezado titulo = "Optimización lineal" descripcion = "Optimización de la producción semanal de helados." icono = {faCode}/>
                 <form action =  '/resultados' method="get"  >
                     <SeccionForm titulo = "Sabores a producir" nombreTipo= "Sabor" nombreCantidad = "Demanda" iconoTitulo =  {faIceCream} iconoCantidad = {faChartLine} nombreAPI ="helados" />
                     <SeccionForm titulo = "Materias primas disponibles" nombreTipo= "Materia Prima" nombreCantidad = "Disponibilidad" iconoTitulo =  {faBox} iconoCantidad = {faBoxes} nombreAPI="materiasprima"/>

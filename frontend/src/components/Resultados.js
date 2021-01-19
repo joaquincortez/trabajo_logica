@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from "axios";
+import { faCode }  from '@fortawesome/free-solid-svg-icons';
+import Encabezado from './Encabezado';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
@@ -84,7 +86,7 @@ class Resultados extends React.Component{
         console.log(this.state.datosMateria);
         return(
             <div>
-                {console.log("Renderizando...")}
+                <Encabezado titulo = "Optimización lineal" descripcion = "Resultados de la consulta." icono = {faCode}/>
                 <h2>Presupuesto en helados</h2>
                 {this.state.datosHelado.map(elem => 
                     <li>Total en {elem[0]} es ${elem[1]}</li>

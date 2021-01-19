@@ -33,3 +33,11 @@ body{
 .seccionForm{
     margin-top: 5%;
 }
+
+.scheduling{
+    text-align: center;
+}
+
+.scheduling select{
+    margin: 1%;
+}
