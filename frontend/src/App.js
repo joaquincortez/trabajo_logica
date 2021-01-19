@@ -11,7 +11,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
 } from "react-router-dom";
 
 
@@ -21,7 +20,6 @@ function App() {
       <div className="App">
         <NavBar />
         <div className = 'container'>
-          <Switch>
             <div className="jumbotron jumbotron-fluid">
               <div className="container">
               <h1 className="display-4"><FontAwesomeIcon icon={faCode} />Optimización lineal</h1>
@@ -33,7 +31,6 @@ function App() {
                 </Switch>
               </div>
             </div>
-          </Switch>
         </div>
       </div>
     </Router>

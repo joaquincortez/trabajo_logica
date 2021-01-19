@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SeccionForm from './SeccionForm';
 import SeccionRadio from './SeccionRadio';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -26,7 +26,7 @@ class FormOptimizacion extends React.Component{
                     <SeccionForm titulo = "Sabores a producir" nombreTipo= "Sabor" nombreCantidad = "Demanda" iconoTitulo =  {faIceCream} iconoCantidad = {faChartLine} nombreAPI ="helados" />
                     <SeccionForm titulo = "Materias primas disponibles" nombreTipo= "Materia Prima" nombreCantidad = "Disponibilidad" iconoTitulo =  {faBox} iconoCantidad = {faBoxes} nombreAPI="materiasprima"/>
                     <SeccionRadio nombre = 'Objetivo'/>
-                    <button type="submit" class="btn btn-dark" ><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
+                    <button type="submit" className="btn btn-dark" ><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
                 </form>
             </div>
         );

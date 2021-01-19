@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import {useLocation} from 'react-router-dom';
+import React from 'react';
 import axios from "axios";
 
 axios.defaults.xsrfCookieName = 'csrftoken';
@@ -23,7 +22,7 @@ class Resultados extends React.Component{
 
     enviarRequest(sabores){
         const json = JSON.stringify(sabores);
-        const res = axios.post('http://localhost:8000/calculos/', json, {
+        axios.post('http://localhost:8000/calculos/', json, {
         headers: {
             'Content-Type': 'application/json'
         }

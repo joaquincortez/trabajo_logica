@@ -37,13 +37,13 @@ class SeccionForm extends React.Component{
   render(){
       return(
           <div className="seccionForm">
-              <div class="encabezado">
+              <div className="encabezado">
           <h2><FontAwesomeIcon icon = {this.props.iconoTitulo} /> {this.props.titulo}</h2>
-          <div class="form-group row">
-            <div class="col-9 text">
+          <div className="form-group row">
+            <div className="col-9 text">
               <h4>{this.props.nombreTipo}</h4>
             </div>
-            <div class="col-3">
+            <div className="col-3">
               <h4><FontAwesomeIcon icon = {this.props.iconoCantidad} /> {this.props.nombreCantidad}</h4>
             </div>
           </div>

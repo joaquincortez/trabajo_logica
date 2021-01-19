@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/optimizacion.css';
 
@@ -13,7 +13,7 @@ class SeccionDato extends React.Component{
                 <div className="col-9 text-center">
                     <select name = {this.props.nombre + this.props.nro}  className="custom-select" id="inputGroupSelect01">
                         <option id="-1" value="-1" >Seleccionar opción</option>
-                        {this.props.datos.map(dato => (<option id={dato.id} value= {dato.id}>{dato.nombre}</option>))}
+                        {this.props.datos.map(dato => (<option key = {dato.id} id={dato.id} value= {dato.id}>{dato.nombre}</option>))}
                     </select>
                 </div>
                 <div className="col-3 text-center">

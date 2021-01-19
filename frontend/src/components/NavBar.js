@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/optimizacion.css';
 
@@ -15,13 +15,13 @@ class NavBar extends React.Component{
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
                 <li className="nav-item active">
-                <a className="nav-link" href="#">Optimización lineal<span className="sr-only">(current)</span></a>
+                <a className="nav-link" href="/">Optimización lineal<span className="sr-only">(current)</span></a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Scheduling</a>
+                <a className="nav-link disabled" href="/" tabIndex="-1" aria-disabled="true">Scheduling</a>
                 </li>
                 <li className="nav-item">
-                <a className="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Routing</a>
+                <a className="nav-link disabled" href="/" tabIndex="-1" aria-disabled="true">Routing</a>
                 </li>
                 <li className="nav-item">
                 <a className="nav-link" href="http://127.0.0.1:8000/admin/">Panel de administración</a>
