@@ -50,6 +50,15 @@ class Resultados extends React.Component{
         .catch(err => {console.log(err)});
     }
 
+    requestAmbos = (helados, materias) => {
+        axios
+        .post("http://localhost:8000/calculos/", {helados, materias})
+        .then(res => {
+            console.log(res);
+            this.setState({ datosMateria: Object.keys(res.data).map((key) => [key, res.data[key]]) })})
+        .catch(err => {console.log(err)});
+    }
+
     componentDidMount(){
         let query = this.usarQuery();
         let parametros = Array.from(query.entries());
@@ -80,6 +89,8 @@ class Resultados extends React.Component{
         console.log(resHelado);
         const resMateria = this.requestMateria(materias);
         console.log(resMateria);
+        const resAmbos = this.requestAmbos(helados, materias);
+        console.log("respuesta ambos es", resAmbos);
     }
 
     render(){  

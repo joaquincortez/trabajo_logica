@@ -17,16 +17,16 @@ class NavBar extends React.Component{
                 <li className="nav-item active">
                 <a className="nav-link" href="/">Optimización lineal<span className="sr-only">(current)</span></a>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item active">
                 <a className="nav-link" href="/packing" tabIndex="-1" aria-disabled="false">Packing</a>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item active">
                 <a className="nav-link" href="/scheduling" tabIndex="-1" aria-disabled="false">Scheduling</a>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item active">
                 <a className="nav-link" href="/routing" tabIndex="-1" aria-disabled="false">Routing</a>
                 </li>
-                <li className="nav-item">
+                <li className="nav-item active">
                 <a className="nav-link" href="http://127.0.0.1:8000/admin/">Panel de administración</a>
                 </li>
             </ul>
