@@ -44,7 +44,7 @@ def datos_helados(datos):
         precios.append(float(helado.precio))
         demandas.append(value)
     
-    return list(datos.keys()),cantidades, precios, demandas
+    return list(datos.keys()),cantidades, precios, list(map(int, demandas)) 
 
 
 def datos_materias(datos):
@@ -52,7 +52,7 @@ def datos_materias(datos):
     costos = []
     for idm in id_materias:
         costos.append(float(MateriaPrima.objects.get(pk=idm).costo))
-    return list(map(int, id_materias)), list(datos.values()), costos
+    return list(map(int, id_materias)), list(map(int, list(datos.values()))), costos
 
 def datos_materiaprima_helado(helados_id):
     cantidades_mph = [] #mph: materia prima por helado
@@ -98,6 +98,20 @@ def crear_modelo(precio_helados, demanda_helados, mat_helado, disponibilidad_mat
     data['precio_base']=costo_materias #Dinero que cuesta cada MP por unidad
     data['num_constraints']=len(costo_materias) #N° de MP
     data['demanda']=demanda_helados
+    print("DATA ES %s" %data)
     return data
+
+def encuentra_no_validos(id_materias, reg_mat_hel, id_helados):
+    lista = list(reg_mat_hel)
+    helados_no_validos = []
+    id_no_validos = []
+    for i in range(0,len(lista)):
+        if not set(list(lista[i].keys())) <= set(id_materias):
+            print("lista es %s y materias es %s" %(list(lista[i].keys()), id_materias))
+            helados_no_validos.append(i)
+            id_no_validos.append(id_helados[i])
+    return helados_no_validos, id_no_validos
+    
+
 
 

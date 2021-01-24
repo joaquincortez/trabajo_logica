@@ -13,6 +13,7 @@ class Resultados extends React.Component{
         this.state = {
           datosHelado: [],
           datosMateria: [],
+          datosGeneral: [],
         }
     }
 
@@ -55,7 +56,7 @@ class Resultados extends React.Component{
         .post("http://localhost:8000/calculos/", {helados, materias})
         .then(res => {
             console.log(res);
-            this.setState({ datosMateria: Object.keys(res.data).map((key) => [key, res.data[key]]) })})
+            this.setState({ datosGeneral: res.data })})
         .catch(err => {console.log(err)});
     }
 
@@ -106,6 +107,8 @@ class Resultados extends React.Component{
                 {this.state.datosMateria.map(elem => 
                     <li>Total en {elem[0]} es ${elem[1]}</li>
                     )}
+                <h2>Respuesta de Optimización</h2>
+                <p>{this.state.datosGeneral}</p>
             </div>
         )
     }
