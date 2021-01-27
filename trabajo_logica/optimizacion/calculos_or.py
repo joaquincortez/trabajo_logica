@@ -39,7 +39,7 @@ def minimizacion_costos(data):
 
   #Restriccion de que la produccion debe ser mayor o igual que la demanda
     for i in range(data['num_vars']):
-        constraint = solver.RowConstraint(data['demanda'][i], float('inf') , '')
+        constraint = solver.RowConstraint(0, data['demanda'][i] , '')
         for j in range(solver.NumVariables()):
             constraint.SetCoefficient(x[j],1) 
         
@@ -58,7 +58,7 @@ def minimizacion_costos(data):
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name(), ' = ', x[j].solution_value()) + "\n"
+            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
     else:
         print('The problem does not have an optimal solution.')
         respuesta+= "No hay solucion optima. \n"
@@ -88,7 +88,7 @@ def maximizacion_ganancias(data):
 
     #Restriccion de que la produccion debe ser mayor o igual que la demanda
     for i in range(data['num_vars']):
-        constraint = solver.RowConstraint(data['demanda'][i], float('inf') , '')
+        constraint = solver.RowConstraint(0, data['demanda'][i] , '')
         for j in range(solver.NumVariables()):
             constraint.SetCoefficient(x[j],1) 
 
@@ -109,7 +109,7 @@ def maximizacion_ganancias(data):
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name(), ' = ', x[j].solution_value()) + "\n"
+            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
     else:
         print('The problem does not have an optimal solution.')
         respuesta+= "No hay solucion optima. \n"
@@ -135,7 +135,8 @@ def maximizacion_produccion(data):
 
     #Restriccion de que la produccion debe ser mayor o igual que la demanda
     for i in range(data['num_vars']):
-        constraint = solver.RowConstraint(data['demanda'][i], float('inf') , '')
+        #constraint = solver.RowConstraint(data['demanda'][i], float('inf') , '') #para menor igual  de cero a demanda en vez de demanda a infinito
+        constraint = solver.RowConstraint(0, data['demanda'][i] , '') #MENOR QUE LA DEMANDA
         for j in range(solver.NumVariables()):
             constraint.SetCoefficient(x[j],1) 
 
@@ -152,7 +153,7 @@ def maximizacion_produccion(data):
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name(), ' = ', x[j].solution_value()) + "\n"
+            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
     else:
         print('The problem does not have an optimal solution.')
         respuesta+= "No hay solucion optima. \n"

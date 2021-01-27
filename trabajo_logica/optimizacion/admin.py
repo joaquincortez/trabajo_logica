@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Helado, MateriaPrima, MateriaPrima_Helado
+from .models import Helado, MateriaPrima, MateriaPrima_Helado, Maquina, MaquinaHelado
 
 class MateriaPrima_HeladoInLine(admin.TabularInline):
     model = MateriaPrima_Helado
@@ -15,3 +15,5 @@ class HeladoAdmin(admin.ModelAdmin):
 
 admin.site.register(Helado, HeladoAdmin)
 admin.site.register(MateriaPrima)
+admin.site.register(Maquina)
+admin.site.register(MaquinaHelado)
