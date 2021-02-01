@@ -1,4 +1,4 @@
-from .models import Helado, MateriaPrima, MateriaPrima_Helado
+from .models import Helado, MateriaPrima, MateriaPrima_Helado, MaquinaHelado, Maquina
 import numpy as np
 
 
@@ -112,6 +112,30 @@ def encuentra_no_validos(id_materias, reg_mat_hel, id_helados):
             id_no_validos.append(id_helados[i])
     return helados_no_validos, id_no_validos
     
+
+def datos_heladomaquina(helados):
+    jobs = []
+    print("helados son %s" %helados)
+    for h in helados:
+        ####TENGO LISTA DE ID DE HELADOS Y POR CADA ID OBTENGO LAS MAQUINAS Y LA GUARDO EN ORDEN EN ARREGLO JOBS
+        maquinahelado = MaquinaHelado.objects.all().filter(helado = h).order_by('orden')
+        job = []
+        for m in maquinahelado:
+            print("anadido helado %s" %h)
+            job.append((m.maquina.id,m.tiempo))
+        if job != []:
+            jobs.append(job)
+    return jobs
+
+def nombre_maquinas():
+    maquinas = Maquina.objects.all()
+    nombres = []
+    for m in maquinas:
+        nombres.append(m.nombre)
+    return nombres
+
+
+
 
 
 

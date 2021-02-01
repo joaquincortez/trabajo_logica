@@ -4,8 +4,8 @@ from rest_framework import viewsets
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
 import json
-from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos
-from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion
+from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas
+from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion, Scheduling
 
 
 def index(request):
@@ -60,6 +60,7 @@ def calculos(request):
         #Elimino los que no son posibles crear ya que no se seleccionaron todas sus materias primas como disponibles.
         no_validos, id_no_validos = encuentra_no_validos(id_materias,cant_mph, id_helados)
         print(" no validos es %s" %no_validos)
+        #Elimino los indices
         for i in range(0,len(no_validos)):
             print(" i es %s" %i)
             print("no_validos[%s] es %s" %(i,no_validos[i]))
@@ -96,6 +97,20 @@ def calculos(request):
         #SI NO LO ESTA SE ELIMINAN LOS DATOS, EN EL INDICE, DE CADA UNO DE LOS ARREGLOS.
 
         return HttpResponse(respuesta)
+
+def scheduling(request):
+    if request.method == 'POST':
+        print("HOLAAAAAAAAAAAAA")
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        helados_id = list(map(int, body['helados'])) 
+        print("HELADOS ID ES %s" %helados_id)
+        nombre_maq = nombre_maquinas()
+        jobs = datos_heladomaquina(helados_id)
+        print("nombre maquina %s" %nombre_maq)
+        respuesta = Scheduling(jobs,nombre_maq)
+        return HttpResponse(respuesta)
+        
 
 
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Encabezado from './Encabezado';
+import ResultadosScheduling from './ResultadosScheduling'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faCalendarAlt, faPlus, faCalculator } from '@fortawesome/free-solid-svg-icons';
 import SelectJob from './SelectJob'
@@ -12,6 +13,7 @@ class Scheduling extends React.Component{
         this.state = {
             datos: [],
             selects: [1,2],
+            mostrarResults: false,
         }
 
     }
@@ -31,6 +33,10 @@ class Scheduling extends React.Component{
         this.cargarItems();
     }
 
+    onClickBtn = () =>{
+        this.setState({mostrarResults: true})
+    }
+
     render(){
         return(
             <div>
@@ -38,10 +44,11 @@ class Scheduling extends React.Component{
                 <form action =  '/scheduling' method="get" >
                     <h2>Elegir helados a producir en orden.</h2>
                     <div className = "scheduling">
-                        {this.state.selects.map(select => <SelectJob nombre={"sabor" + select} key = {select.id} datos = {this.state.datos}/> )}
+                        {this.state.selects.map(select => <SelectJob nombre={"sabor" + select} key = {select} datos = {this.state.datos}/> )}
                         <button type="button" className="btn btn-secondary" id="agregarHelado" onClick = {this.AgregarSelect}><FontAwesomeIcon icon={faPlus}/> Agregar helado</button>
                     </div>
-                    <button type="submit" className="btn btn-dark" ><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
+                    <button type="submit" className="btn btn-dark" onClick = {this.onClickBtn}><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
+                    {true && <ResultadosScheduling/>}
                 </form>
             </div>
         )
