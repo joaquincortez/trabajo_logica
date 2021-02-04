@@ -11,10 +11,9 @@ class SeccionRadio extends React.Component{
                     <div className="row">
                         <legend className="col-form-label col-sm-2 pt-0">{this.props.nombre}</legend>
                         <div className="col-sm-10">
-                            <OpcionRadio nombre='Maximizar ganancias'/>
+                            <OpcionRadio checked = "true" nombre='Maximizar ganancias'/>
                             <OpcionRadio nombre='Maximizar produccion'/>
                             <OpcionRadio nombre='Minimizar costos'/>
-                            <OpcionRadio nombre='Minimizar perdidas'/>
                         </div>
                     </div>
                 </fieldset>

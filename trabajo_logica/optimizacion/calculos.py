@@ -38,13 +38,15 @@ def datos_helados(datos):
     cantidades = list(datos.values())
     precios = []
     demandas = []
+    nombres = []
     
     for key, value in lista:
         helado = Helado.objects.get(id=key)
         precios.append(float(helado.precio))
         demandas.append(value)
+        nombres.append(helado.nombre)
     
-    return list(datos.keys()),cantidades, precios, list(map(int, demandas)) 
+    return list(datos.keys()),cantidades, precios, list(map(int, demandas)) , nombres
 
 
 def datos_materias(datos):
@@ -89,7 +91,7 @@ def mapaea_materias(id_materias,cant_helados, reg_mat_hel):
     
     return arr_cant_mathelado.tolist()
 
-def crear_modelo(precio_helados, demanda_helados, mat_helado, disponibilidad_materias, costo_materias):
+def crear_modelo(precio_helados, demanda_helados, mat_helado, disponibilidad_materias, costo_materias, nombre_helados):
     data={}
     data['constraint_coeffs']=mat_helado #Cant de MP usada para hacer el helado
     data['bounds']=disponibilidad_materias #MP disponible
@@ -98,6 +100,7 @@ def crear_modelo(precio_helados, demanda_helados, mat_helado, disponibilidad_mat
     data['precio_base']=costo_materias #Dinero que cuesta cada MP por unidad
     data['num_constraints']=len(costo_materias) #N° de MP
     data['demanda']=demanda_helados
+    data['nombre_helados'] = nombre_helados
     print("DATA ES %s" %data)
     return data
 
@@ -134,6 +137,28 @@ def nombre_maquinas():
         nombres.append(m.nombre)
     return nombres
 
+def datos_packing(id_helados, tamanos, cantidades):
+    nombre_helados = []
+    values = []
+    weights = []
+    for i in range(0,len(id_helados)):
+        helado = Helado.objects.get(id=id_helados[i])
+        nombre_helados += [helado.nombre]* cantidades[i]
+        values += [float(helado.precio) * tamanos[i]] * cantidades[i]
+        weights += [tamanos[i]]*cantidades[i]
+    print("Values son %s weights son %s y nombre_helados son %s" %(values,weights,nombre_helados))
+    return values, weights, nombre_helados
+
+def crear_modelo_packing(weights, values, capacidades, nombre_helados):
+    data = {}
+    data['weights'] = weights
+    data['values'] = values
+    data['items'] = list(range(len(nombre_helados)))
+    data['num_items'] = len(weights)
+    num_bins = len(capacidades) #numero de camiones en nuestro caso
+    data['bins'] = list(range(num_bins))
+    data['bin_capacities'] = capacidades #capacidad de cada camion
+    return data
 
 
 

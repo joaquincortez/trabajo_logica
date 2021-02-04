@@ -4,8 +4,8 @@ from rest_framework import viewsets
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
 import json
-from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas
-from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion, Scheduling
+from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas, datos_packing, crear_modelo_packing
+from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion, Scheduling, Packing
 
 
 def index(request):
@@ -45,7 +45,7 @@ def calculos(request):
         body = json.loads(body_unicode)
 
         helados = body["helados"]
-        id_helados,cantidades, precios, demandas = datos_helados(helados)
+        id_helados,cantidades, precios, demandas, nombres_helados = datos_helados(helados)
         cant_helados = len(id_helados)
         cant_mph = datos_materiaprima_helado(id_helados)
         print("ACA id helados son: %s \n cantidades son %s \n precios son %s \n demandas son %s \n cant materia prima por helado es %s"  %(str(id_helados),str(cantidades), str(precios), str(demandas), str(cant_mph)))
@@ -66,6 +66,7 @@ def calculos(request):
             print("no_validos[%s] es %s" %(i,no_validos[i]))
             print("precios son %s demandas son %s y arreglo mat helado son %s" %(precios,demandas,arreglo_mat_helado))
             del precios[no_validos[i]]
+            del nombres_helados[no_validos[i]]
             del demandas[no_validos[i]]
             for j in range(0, len(id_materias)):
                 del arreglo_mat_helado[j][no_validos[i]]
@@ -76,7 +77,7 @@ def calculos(request):
             print("no_validos[%s] es %s" %(i,no_validos[i]))
 
 
-        data = crear_modelo(precios,demandas, arreglo_mat_helado, disponibilidad,costos)
+        data = crear_modelo(precios,demandas, arreglo_mat_helado, disponibilidad,costos, nombres_helados)
         respuesta = ""
         for idh in id_no_validos:
             print("No es posible producir %s " %Helado.objects.get(pk=idh).nombre)
@@ -84,13 +85,13 @@ def calculos(request):
 
         print("minimizacion costos")
         respuesta +="minimizacion costos"
-        respuesta +=minimizacion_costos(data)
+        respuesta +=str(minimizacion_costos(data))
         print("maximizacion ganancias")
         respuesta +="maximizacion ganancias"
-        respuesta +=maximizacion_ganancias(data)
+        respuesta +=str(maximizacion_ganancias(data))
         print("maximizacion produccion")
         respuesta +="maximizacion produccion"
-        respuesta +=maximizacion_produccion(data)
+        respuesta +=str(maximizacion_produccion(data))
         #QUEDA ELIMINAR LOS HELADOS PARA LOS QUE NO TENGO LAS MATERIAS PRIMAS E INFORMAR QUE NO SE PUEDE PRODUCIR
         #PARA ESTO PIENSO QUE LO IDEAL SERIA UNA VEZ HECHOS TODOS LOS CALCULOS ANTERIORES,
         #SE EVALUEN SI LAS MATERIAS DEL HELADO ESTAN CONTENIDAS EN LAS MATERIAS SELECCIONADAS
@@ -110,7 +111,23 @@ def scheduling(request):
         print("nombre maquina %s" %nombre_maq)
         respuesta = Scheduling(jobs,nombre_maq)
         return HttpResponse(respuesta)
-        
+
+def packing(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        #Convertimos de lista de strings a lista de enteros
+        cantidades = list(map(int, body["cantidades"]))
+        capacidades = list(map(int, body["capacidades"]))
+        helados = list(map(int, body["helados"]))
+        tamanos = list(map(int, body["tamanos"]))
+        values, weights, nombres_helados = datos_packing(helados,tamanos,cantidades)
+        print(body)
+        data = crear_modelo_packing(weights, values, capacidades, nombres_helados)
+        respuesta = Packing(data)
+        print(respuesta)
+        return HttpResponse(str(respuesta))
+
 
 
 

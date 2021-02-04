@@ -52,17 +52,25 @@ def minimizacion_costos(data):
         objective.SetCoefficient(x[j], data['precio_base'][j])
     objective.SetMinimization()
 
-    respuesta = ""
+
   # MINIMIZACION DE COSTOS
+    respuesta = {}
+    respuesta["objetivo"] = "Minimización de costos"
+    respuesta["nombre_helados"] = data["nombre_helados"]
     status = solver.Solve()
     if status == pywraplp.Solver.OPTIMAL:
+        respuesta["resultado"] = "exito"
+        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
+            respuesta["soluciones"].append(str(x[j].solution_value()))
+
+            
     else:
         print('The problem does not have an optimal solution.')
-        respuesta+= "No hay solucion optima. \n"
+        respuesta["resultado"] = "fracaso"
     return respuesta
 
 
@@ -102,18 +110,23 @@ def maximizacion_ganancias(data):
     #Si se minimiza da 0, no minimizar 
 
     # MAXIMIZACION DE LAS GANANCIAS
+    respuesta = {}
+    respuesta["objetivo"] = "Maximización de ganancias"
+    respuesta["nombre_helados"] = data["nombre_helados"]
     status = solver.Solve()
-
-    respuesta = ""
-
     if status == pywraplp.Solver.OPTIMAL:
+        respuesta["resultado"] = "exito"
+        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
+            respuesta["soluciones"].append(str(x[j].solution_value()))
+
+            
     else:
         print('The problem does not have an optimal solution.')
-        respuesta+= "No hay solucion optima. \n"
+        respuesta["resultado"] = "fracaso"
     return respuesta
 
 
@@ -147,17 +160,24 @@ def maximizacion_produccion(data):
         objective.SetCoefficient(x[j], 1)
     objective.SetMaximization()
 
-    respuesta = ""
-    # MAXIMIZACION DE LA PRODUCCION
+    respuesta = {}
+    respuesta["objetivo"] = "Maximización de produccion"
+    respuesta["nombre_helados"] = data["nombre_helados"]
+    
     status = solver.Solve()
     if status == pywraplp.Solver.OPTIMAL:
+        respuesta["resultado"] = "exito"
+        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta+=str(x[j].name())+ ' = '+ str(x[j].solution_value()) + "\n"
+            respuesta["soluciones"].append(str(x[j].solution_value()))
+
+            
     else:
         print('The problem does not have an optimal solution.')
-        respuesta+= "No hay solucion optima. \n"
+        respuesta["resultado"] = "fracaso"
     return respuesta
 
 def Scheduling(jobs_data, nombre_maquinas):
@@ -264,3 +284,68 @@ def Scheduling(jobs_data, nombre_maquinas):
     print(output)
     print(new_arr)
     return "Duracion optima es %i \n Output es %s y new_arr es %s" %(solver.ObjectiveValue(), output, new_arr)
+
+
+def Packing(data):
+
+    # Create the mip solver with the SCIP backend.
+    solver = pywraplp.Solver.CreateSolver('SCIP')
+
+    # Variables
+    # x[i, j] = 1 if item i is packed in bin j.
+    x = {}
+    for i in data['items']:
+        for j in data['bins']:
+            x[(i, j)] = solver.IntVar(0, 1, 'x_%i_%i' % (i, j))
+
+    # Restricciones
+    # Cada item puede estar tan solo en un camion
+    for i in data['items']:
+        solver.Add(sum(x[i, j] for j in data['bins']) <= 1)
+    # El total de cajas no puede superar el tamaño del camion.
+    for j in data['bins']:
+        solver.Add(
+            sum(x[(i, j)] * data['weights'][i]
+                for i in data['items']) <= data['bin_capacities'][j])
+
+    # Objetivo
+    objective = solver.Objective()
+
+    for i in data['items']:
+        for j in data['bins']:
+            objective.SetCoefficient(x[(i, j)], data['values'][i])
+    objective.SetMaximization()
+
+    status = solver.Solve()
+    respuesta = {}
+
+    if status == pywraplp.Solver.OPTIMAL:
+        respuesta["resultado"] = "exito"
+        print('Total packed value:', objective.Value())
+        respuesta["valor_total"] = objective.Value()
+        total_weight = 0
+        for j in data['bins']:
+            bin_weight = 0
+            bin_value = 0
+            respuesta["Camion %i" %j] ={"carga": [],}
+            print('Bin ', j, '\n')
+            for i in data['items']:
+                if x[i, j].solution_value() > 0:
+                    print('Item', i, '- weight:', data['weights'][i], ' value:',
+                          data['values'][i])
+                    bin_weight += data['weights'][i]
+                    bin_value += data['values'][i]
+                    respuesta["Camion %i" %j]["carga"].append({"item": i, "peso":data['weights'][i], "valor":data['values'][i]})
+            print('Packed bin weight:', bin_weight)
+            respuesta["Camion %i" %j]["peso_camion"] = bin_weight
+            print('Packed bin value:', bin_value)
+            respuesta["Camion %i" %j]["valor_camion"] = bin_value
+            print()
+            total_weight += bin_weight
+        print('Total packed weight:', total_weight)
+        respuesta["peso_total"] = total_weight
+    else:
+        print('The problem does not have an optimal solution.')
+        respuesta["resultado"] = "fracaso"
+    return respuesta
+

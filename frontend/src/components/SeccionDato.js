@@ -11,14 +11,14 @@ class SeccionDato extends React.Component{
         return(
             <div className="form-group row">
                 <div className="col-9 text-center">
-                    <select name = {this.props.nombre + this.props.nro}  className="custom-select" id="inputGroupSelect01">
-                        <option id="-1" value="-1" >Seleccionar opción</option>
+                    <select required name = {this.props.nombre + this.props.nro}  className="custom-select" id="inputGroupSelect01">
+                        <option id="-1" value="" >Seleccionar opción</option>
                         {this.props.datos.map(dato => (<option key = {dato.id} id={dato.id} value= {dato.id}>{dato.nombre}</option>))}
                     </select>
                 </div>
                 <div className="col-3 text-center">
                     <div className="input-group">
-                        <input name = {"cant" + this.props.nombre + this.props.nro} type="number" className="form-control" aria-label="Demanda en kg"></input>
+                        <input required name = {"cant" + this.props.nombre + this.props.nro} type="number" min="1" className="form-control" aria-label="Demanda en kg"></input>
                         <div className="input-group-append">
                             <span className="input-group-text">kg</span>
                         </div>

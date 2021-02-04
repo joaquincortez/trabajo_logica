@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from "axios";
-import Encabezado from './Encabezado';
 
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';

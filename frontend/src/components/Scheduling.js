@@ -44,7 +44,7 @@ class Scheduling extends React.Component{
                 <form action =  '/scheduling' method="get" >
                     <h2>Elegir helados a producir en orden.</h2>
                     <div className = "scheduling">
-                        {this.state.selects.map(select => <SelectJob nombre={"sabor" + select} key = {select} datos = {this.state.datos}/> )}
+                        {this.state.selects.map(select => <SelectJob nro={select -1} nombre={"sabor" + select} key = {select} datos = {this.state.datos}/> )}
                         <button type="button" className="btn btn-secondary" id="agregarHelado" onClick = {this.AgregarSelect}><FontAwesomeIcon icon={faPlus}/> Agregar helado</button>
                     </div>
                     <button type="submit" className="btn btn-dark" onClick = {this.onClickBtn}><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>

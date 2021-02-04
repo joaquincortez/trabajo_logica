@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import '../css/optimizacion.css';
 import SeccionDato from './SeccionDato';
@@ -12,7 +12,7 @@ class SeccionForm extends React.Component{
   constructor(props){
     super(props)
     this.state = {
-      nuevosInputs: [],
+      nuevosInputs: [1,2],
       datos: [],
     }
     this.AgregarOpcion = this.AgregarOpcion.bind(this);
@@ -49,9 +49,6 @@ class SeccionForm extends React.Component{
           </div>
         </div>
         <div>
-          <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} datos = {this.state.datos} nro = "1"/>
-          <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} datos = {this.state.datos} nro = "2"/>
-          <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} datos = {this.state.datos} nro = "3"/>
           {this.state.nuevosInputs.map(input => <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} key = {input.id} datos = {this.state.datos} nro = {this.state.nuevosInputs.length+3}/> )}
         </div>
           <button type="button" className="btn btn-secondary" id="agregarSabor" onClick = {this.AgregarOpcion}><FontAwesomeIcon icon={faPlus}/> Agregar {this.props.nombreTipo}</button>
