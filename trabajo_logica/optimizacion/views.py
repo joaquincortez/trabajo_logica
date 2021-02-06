@@ -116,7 +116,8 @@ def scheduling(request):
         jobs = datos_heladomaquina(helados_id)
         print("nombre maquina %s" %nombre_maq)
         respuesta = Scheduling(jobs,nombre_maq, nombres_helado)
-        return HttpResponse(respuesta)
+        print("scheduling respuesta es ", respuesta)
+        return JsonResponse(respuesta)
 
 def packing(request):
     if request.method == 'POST':

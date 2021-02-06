@@ -47,7 +47,8 @@ class Scheduling extends React.Component{
                         {this.state.selects.map(select => <SelectJob nro={select -1} nombre={"sabor" + select} key = {select} datos = {this.state.datos}/> )}
                         <button type="button" className="btn btn-secondary" id="agregarHelado" onClick = {this.AgregarSelect}><FontAwesomeIcon icon={faPlus}/> Agregar helado</button>
                     </div>
-                    <button type="submit" className="btn btn-dark" onClick = {this.onClickBtn}><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
+                    <button type="submit" className="btn btn-dark" onSubmit = {this.onClickBtn}><FontAwesomeIcon icon = {faCalculator} /> Calcular</button>
+                    {console.log("mostrar results es ", this.state.mostrarResults)}
                     {true && <ResultadosScheduling/>}
                 </form>
             </div>
