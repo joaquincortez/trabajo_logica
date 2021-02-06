@@ -125,7 +125,7 @@ def datos_heladomaquina(helados):
         job = []
         for m in maquinahelado:
             print("anadido helado %s" %h)
-            job.append((m.maquina.id,m.tiempo))
+            job.append((m.maquina.id-1,m.tiempo))
         if job != []:
             jobs.append(job)
     return jobs
@@ -135,6 +135,12 @@ def nombre_maquinas():
     nombres = []
     for m in maquinas:
         nombres.append(m.nombre)
+    return nombres
+
+def nombre_helados_id(id_helados):
+    nombres = []
+    for idh in id_helados:
+        nombres.append(Helado.objects.get(id=idh).nombre)
     return nombres
 
 def datos_packing(id_helados, tamanos, cantidades):

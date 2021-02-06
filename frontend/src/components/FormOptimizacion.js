@@ -58,7 +58,7 @@ class FormOptimizacion extends React.Component{
         return(
             <div>
                 <Encabezado titulo = "Optimización lineal" descripcion = "Optimización de la producción semanal de helados." icono = {faCode}/>
-                <form action='/resultados' method="get" target="_self" onSubmit={this.mostrarResultados}>
+                <form action='/resultados' method="get" onSubmit={this.mostrarResultados}>
                     <SeccionForm titulo = "Sabores a producir" nombreTipo= "Sabor" nombreCantidad = "Demanda" iconoTitulo =  {faIceCream} iconoCantidad = {faChartLine} nombreAPI ="helados" />
                     <SeccionForm titulo = "Materias primas disponibles" nombreTipo= "Materia Prima" nombreCantidad = "Disponibilidad" iconoTitulo =  {faBox} iconoCantidad = {faBoxes} nombreAPI="materiasprima"/>
                     <SeccionRadio nombre = 'Objetivo'/>

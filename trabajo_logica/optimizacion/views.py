@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
 import json
-from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas, datos_packing, crear_modelo_packing, resumir_packing
+from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas, datos_packing, crear_modelo_packing, resumir_packing, nombre_helados_id
 from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion, Scheduling, Packing
 
 
@@ -111,10 +111,11 @@ def scheduling(request):
         body = json.loads(body_unicode)
         helados_id = list(map(int, body['helados'])) 
         print("HELADOS ID ES %s" %helados_id)
+        nombres_helado = nombre_helados_id(helados_id)
         nombre_maq = nombre_maquinas()
         jobs = datos_heladomaquina(helados_id)
         print("nombre maquina %s" %nombre_maq)
-        respuesta = Scheduling(jobs,nombre_maq)
+        respuesta = Scheduling(jobs,nombre_maq, nombres_helado)
         return HttpResponse(respuesta)
 
 def packing(request):

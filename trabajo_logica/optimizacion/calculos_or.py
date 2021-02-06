@@ -181,14 +181,14 @@ def maximizacion_produccion(data):
         respuesta["razon_fracaso"] = "no_solucion"
     return respuesta
 
-def Scheduling(jobs_data, nombre_maquinas):
+def Scheduling(jobs_data, nombre_maquinas, nombre_helados):
     print("SCHEDULIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIING")
     print("JOBS DATA ES %s" %jobs_data)
     # Create the model.
     model = cp_model.CpModel()
 
     #se fija en el primer componente de cada tupla, para asi encontrar la cantidad de maquinas
-    machines_count = max(task[0] for job in jobs_data for task in job) # +1 eliminado
+    machines_count = 1 + max(task[0] for job in jobs_data for task in job) # +1 eliminado
     print("MACHINE COUNT ES %s" %machines_count)
     all_machines = range(machines_count)
     #la duracion de las tareas(horizon) se calcula como la sumatoria de todas las duraciones
@@ -257,6 +257,8 @@ def Scheduling(jobs_data, nombre_maquinas):
     output = ''
     arr=np.array('')
     print("ALL MACHINES ES %s" %all_machines)
+
+    rows = []
     for machine in all_machines:
         # Sort by starting time.
         assigned_jobs[machine].sort()
@@ -264,7 +266,21 @@ def Scheduling(jobs_data, nombre_maquinas):
         sol_line = '           '
 
         for assigned_task in assigned_jobs[machine]:
-            name = 'trabajo_%i_%i  ' % (assigned_task.job, assigned_task.index) #numero de helado, numero de esa maquina para ese helado
+            # ['TrabajoMaquina', 'Trabajo en Maquina (no relev)', 'Maquina', null, null,  toMilliseconds(5), 100, null]
+            #name = 'trabajo_%i_%i  ' % (assigned_task.job, assigned_task.index) #numero de helado, numero de esa maquina para ese helado
+            name = ' %s en %s depende de %s' %(nombre_helados[assigned_task.job], nombre_maquinas[assigned_task.index],nombre_maquinas[assigned_task.index-1])
+
+            rows.append([nombre_helados[assigned_task.job]+nombre_maquinas[assigned_task.index], 
+                nombre_helados[assigned_task.job]+" en " +nombre_maquinas[assigned_task.index],
+                nombre_maquinas[assigned_task.index],
+                None,
+                None,
+                assigned_task.duration,
+                100,
+                nombre_helados[assigned_task.job]+nombre_maquinas[assigned_task.index-1] 
+            ])
+            if assigned_task.index == 0:
+                rows[-1][-1] = None
             # Add spaces to output to align columns.
             sol_line_tasks += '%-10s' % name
 
@@ -284,6 +300,7 @@ def Scheduling(jobs_data, nombre_maquinas):
     print('Optimal Schedule Length: %i' % solver.ObjectiveValue())
     print(output)
     print(new_arr)
+    print(rows)
     return "Duracion optima es %i \n Output es %s y new_arr es %s" %(solver.ObjectiveValue(), output, new_arr)
 
 
