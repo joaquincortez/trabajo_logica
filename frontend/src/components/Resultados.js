@@ -1,39 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import axios from "axios";
 import { faCode }  from '@fortawesome/free-solid-svg-icons';
 import Encabezado from './Encabezado';
 
-import { Modal, Button } from 'react-bootstrap';
-
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-
-function Example() {
-    const [show, setShow] = useState(false);
-  
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-  
-    return (
-      <>
-        <Button variant="primary" onClick={handleShow}>
-          Launch demo modal
-        </Button>
-  
-        <Modal show={show} onHide={handleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>Resultados de Optimización</Modal.Title>
-          </Modal.Header>
-          <Modal.Body><Resultados /> </Modal.Body>
-          <Modal.Footer>
-            <Button variant="primary" onClick={handleClose}>
-              Aceptar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </>
-    );
-  }
 
 const respuestas = {
     "fracaso": "Se ha producido un error.",
@@ -137,33 +108,48 @@ class Resultados extends React.Component{
     render(){ 
         console.log(this.state.datosMateria);
         return(
-            <div className="seccion-result">
-                <div>
-                    {this.state.resultOpt["resultado"] === "fracaso" && 
-                        <div>
-                        <h3 className="text-danger">{respuestas[this.state.resultOpt["resultado"]]}</h3>
-                        <p>{respuestas[this.state.resultOpt["razon_fracaso"]]}</p>
-                        </div>}
-                    {this.state.resultOpt["optimizacion"] && this.state.resultOpt["optimizacion"]["resultado"] ==="fracaso" && 
-                    <div>
-                        <h3 className="text-warning">El problema no tiene una solución óptima.</h3>
-                        <p className="text-secondary">No se pudo encontrar una solución óptima para las restricciones seleccionadas.</p>
-                    </div>}
-                    {this.state.resultOpt["optimizacion"] && this.state.resultOpt["optimizacion"]["resultado"] ==="exito" &&
-                    <div> 
-                        <h4>Objetivo: {respuestas[this.state.resultOpt["optimizacion"]["objetivo"]]}</h4>
-                        <h5>Se produjeron ganancias por ${this.state.resultOpt["optimizacion"]["objective_value"]}</h5>
-                        <h6>Se deben producir las siguientes cantidades de helados para {respuestas[this.state.resultOpt["optimizacion"]["objetivo"]].toLowerCase()}:</h6>
-                        <ul>
-                            {this.state.resultOpt.optimizacion.soluciones.map(solucion =>
-                                <li>
-                                    {console.log("solucion es", solucion)}
-                                    {solucion.cantidad}kg de {solucion.nombre}
-                                </li> )}
-                        </ul>
-                    </div>}
+            <div>
+                <Encabezado titulo = "Optimización lineal" descripcion = "Resultados de la consulta." icono = {faCode}/>
+                <div className="seccion-result">
+                    <h2>Presupuesto en helados</h2>
+                    {this.state.datosHelado.map(elem => 
+                        <li>Total en {elem[0]} es ${elem[1]}</li>
+                        )}
                 </div>
-                <Example />
+                <div className="seccion-result">
+                    <h2>Presupuesto en materias primas</h2>
+                    {this.state.datosMateria.map(elem => 
+                        <li>Total en {elem[0]} es ${elem[1]}</li>
+                        )}
+                </div>
+                <div className="seccion-result">
+                <h2>Respuesta de Optimización</h2>
+                    <div>
+                        {this.state.resultOpt["resultado"] === "fracaso" && 
+                            <div>
+                            <h3 className="text-danger">{respuestas[this.state.resultOpt["resultado"]]}</h3>
+                            <p>{respuestas[this.state.resultOpt["razon_fracaso"]]}</p>
+                            </div>}
+                        {this.state.resultOpt["optimizacion"] && this.state.resultOpt["optimizacion"]["resultado"] ==="fracaso" && 
+                        <div>
+                            <h3 className="text-warning">El problema no tiene una solución óptima.</h3>
+                            <p className="text-secondary">No se pudo encontrar una solución óptima para las restricciones seleccionadas.</p>
+                        </div>}
+                        {this.state.resultOpt["optimizacion"] && this.state.resultOpt["optimizacion"]["resultado"] ==="exito" &&
+                        <div> 
+                            <h4>Objetivo: {respuestas[this.state.resultOpt["optimizacion"]["objetivo"]]}</h4>
+                            <h5>Se produjeron ganancias por ${this.state.resultOpt["optimizacion"]["objective_value"]}</h5>
+                            <h5>Se deben producir las siguientes cantidades de helados para {respuestas[this.state.resultOpt["optimizacion"]["objetivo"]].toLowerCase()}:</h5>
+                            <ul>
+                                {this.state.resultOpt.optimizacion.soluciones.map(solucion =>
+                                    <li>
+                                        {console.log("solucion es", solucion)}
+                                        {solucion.cantidad} unidades de {solucion.nombre}
+                                    </li> )}
+                            </ul>
+                        </div>}
+                    </div>
+                </div>
             </div>
         )
     }

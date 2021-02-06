@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from .serializers import HeladoSerializer, MateriaPrima_HeladoSerializer, MateriaPrimaSerializer     
 from .models import Helado, MateriaPrima, MateriaPrima_Helado
 import json
-from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas, datos_packing, crear_modelo_packing
+from .calculos import calcular_precios_helado, calcular_precios_materia,datos_helados,datos_materiaprima_helado,datos_materias, mapaea_materias, crear_modelo, encuentra_no_validos, datos_heladomaquina, nombre_maquinas, datos_packing, crear_modelo_packing, resumir_packing
 from .calculos_or import minimizacion_costos, maximizacion_ganancias, maximizacion_produccion, Scheduling, Packing
 
 
@@ -130,8 +130,9 @@ def packing(request):
         print(body)
         data = crear_modelo_packing(weights, values, capacidades, nombres_helados)
         respuesta = Packing(data)
-        print(respuesta)
-        return HttpResponse(str(respuesta))
+        print(resumir_packing(respuesta))
+        resumido = resumir_packing(respuesta)
+        return JsonResponse(resumido)
 
 
 

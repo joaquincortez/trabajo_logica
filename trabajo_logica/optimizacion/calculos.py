@@ -154,11 +154,69 @@ def crear_modelo_packing(weights, values, capacidades, nombre_helados):
     data['weights'] = weights
     data['values'] = values
     data['items'] = list(range(len(nombre_helados)))
+    data['nombre_items'] = nombre_helados
     data['num_items'] = len(weights)
     num_bins = len(capacidades) #numero de camiones en nuestro caso
     data['bins'] = list(range(num_bins))
     data['bin_capacities'] = capacidades #capacidad de cada camion
     return data
+
+def resumir_packing(datos):
+    resumido = {
+        'resultado':datos['resultado'],
+        'valor_total': datos['valor_total'],
+        'camiones': [],
+        'peso_total': datos['peso_total']
+    }
+    for camion in datos['camiones']:
+        cargas = []
+        item_anterior = camion['carga'][0]['item']
+        peso_anterior = camion['carga'][0]['peso']
+        contador_total = 0
+        peso_total = 0
+        valor_total = 0
+        contador = 0
+        suma_valor = 0
+        for carga in camion['carga']:
+            contador_total += 1
+            peso_total += carga['peso']
+            valor_total += carga['valor']
+            if carga['item'] == item_anterior and carga['peso'] == peso_anterior:
+                contador+=1
+                suma_valor+=carga['valor']
+            else:
+                cargas.append({
+                    'item': item_anterior,
+                    'peso': peso_anterior,
+                    'valor': suma_valor,
+                    'cantidad': contador
+                })
+                contador = 1
+                suma_valor = carga['valor']
+                item_anterior = carga['item']
+                peso_anterior = carga['peso']
+            #Inserto la ultima:
+        cargas.append({
+                'item': item_anterior,
+                'peso': peso_anterior,
+                'valor': suma_valor,
+                'cantidad': contador
+        })
+        resumido['camiones'].append({
+            'carga':cargas,
+            'cantidad_cajas': contador_total,
+            'peso_camion': peso_total,
+            'valor_camion': valor_total,
+            'capacidad': camion['capacidad']
+        })
+    return resumido
+        
+
+            
+
+
+
+
 
 
 

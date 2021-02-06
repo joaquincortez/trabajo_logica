@@ -325,11 +325,12 @@ def Packing(data):
         respuesta["resultado"] = "exito"
         print('Total packed value:', objective.Value())
         respuesta["valor_total"] = objective.Value()
+        respuesta["camiones"] = []
         total_weight = 0
         for j in data['bins']:
             bin_weight = 0
             bin_value = 0
-            respuesta["Camion %i" %j] ={"carga": [],}
+            respuesta["camiones"].append({"carga": [], "capacidad": data['bin_capacities'][j], })
             print('Bin ', j, '\n')
             for i in data['items']:
                 if x[i, j].solution_value() > 0:
@@ -337,11 +338,11 @@ def Packing(data):
                           data['values'][i])
                     bin_weight += data['weights'][i]
                     bin_value += data['values'][i]
-                    respuesta["Camion %i" %j]["carga"].append({"item": i, "peso":data['weights'][i], "valor":data['values'][i]})
+                    respuesta["camiones"][j]["carga"].append({"item": data["nombre_items"][i], "peso":data['weights'][i], "valor":data['values'][i]})
             print('Packed bin weight:', bin_weight)
-            respuesta["Camion %i" %j]["peso_camion"] = bin_weight
+            respuesta["camiones"][j]["peso_camion"] = bin_weight
             print('Packed bin value:', bin_value)
-            respuesta["Camion %i" %j]["valor_camion"] = bin_value
+            respuesta["camiones"][j]["valor_camion"] = bin_value
             print()
             total_weight += bin_weight
         print('Total packed weight:', total_weight)
