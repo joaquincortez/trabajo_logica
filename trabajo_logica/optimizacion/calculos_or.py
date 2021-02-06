@@ -40,7 +40,7 @@ def minimizacion_costos(data):
 
   #Restriccion de que la produccion debe ser mayor o igual que la demanda
     for i in range(data['num_vars']):
-        constraint = solver.RowConstraint(0, data['demanda'][i] , '')
+        constraint = solver.RowConstraint(data['demanda'][i], float('inf') , '')
         for j in range(solver.NumVariables()):
             constraint.SetCoefficient(x[j],1) 
         
@@ -55,12 +55,12 @@ def minimizacion_costos(data):
 
   # MINIMIZACION DE COSTOS
     respuesta = {}
-    respuesta["objetivo"] = "Minimización de costos"
+    respuesta["objetivo"] = "minimizacion_costos"
     respuesta["nombre_helados"] = data["nombre_helados"]
     status = solver.Solve()
     if status == pywraplp.Solver.OPTIMAL:
         respuesta["resultado"] = "exito"
-        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["objective_value"] = str(round(solver.Objective().Value(),2))
         respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
@@ -111,22 +111,22 @@ def maximizacion_ganancias(data):
 
     # MAXIMIZACION DE LAS GANANCIAS
     respuesta = {}
-    respuesta["objetivo"] = "Maximización de ganancias"
-    respuesta["nombre_helados"] = data["nombre_helados"]
+    respuesta["objetivo"] = "maximizacion_ganancias"
     status = solver.Solve()
     if status == pywraplp.Solver.OPTIMAL:
         respuesta["resultado"] = "exito"
-        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["objective_value"] = str(round(solver.Objective().Value(),2))
         respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta["soluciones"].append(str(x[j].solution_value()))
+            respuesta["soluciones"].append({"nombre": data["nombre_helados"][j], "cantidad": str(round(x[j].solution_value(),2))})
 
             
     else:
         print('The problem does not have an optimal solution.')
         respuesta["resultado"] = "fracaso"
+        respuesta["razon_fracaso"] = "no_solucion"
     return respuesta
 
 
@@ -161,23 +161,24 @@ def maximizacion_produccion(data):
     objective.SetMaximization()
 
     respuesta = {}
-    respuesta["objetivo"] = "Maximización de produccion"
+    respuesta["objetivo"] = "maximizacion_produccion"
     respuesta["nombre_helados"] = data["nombre_helados"]
     
     status = solver.Solve()
     if status == pywraplp.Solver.OPTIMAL:
         respuesta["resultado"] = "exito"
-        respuesta["objective_value"] = str(solver.Objective().Value())
+        respuesta["objective_value"] = str(round(solver.Objective().Value(),2))
         respuesta["soluciones"] = []
         print('Objective value =', solver.Objective().Value())
         for j in range(data['num_vars']):
             print(x[j].name(), ' = ', x[j].solution_value())
-            respuesta["soluciones"].append(str(x[j].solution_value()))
+            respuesta["soluciones"].append(str(round(x[j].solution_value(),2)))
 
             
     else:
         print('The problem does not have an optimal solution.')
         respuesta["resultado"] = "fracaso"
+        respuesta["razon_fracaso"] = "no_solucion"
     return respuesta
 
 def Scheduling(jobs_data, nombre_maquinas):
@@ -263,7 +264,7 @@ def Scheduling(jobs_data, nombre_maquinas):
         sol_line = '           '
 
         for assigned_task in assigned_jobs[machine]:
-            name = 'trabajo_%i_%i  ' % (assigned_task.job, assigned_task.index)
+            name = 'trabajo_%i_%i  ' % (assigned_task.job, assigned_task.index) #numero de helado, numero de esa maquina para ese helado
             # Add spaces to output to align columns.
             sol_line_tasks += '%-10s' % name
 
@@ -320,6 +321,7 @@ def Packing(data):
     respuesta = {}
 
     if status == pywraplp.Solver.OPTIMAL:
+        print("objective value es ", type(objective.Value()))
         respuesta["resultado"] = "exito"
         print('Total packed value:', objective.Value())
         respuesta["valor_total"] = objective.Value()
@@ -347,5 +349,6 @@ def Packing(data):
     else:
         print('The problem does not have an optimal solution.')
         respuesta["resultado"] = "fracaso"
+        respuesta["razon_fracaso"] = "no_solucion"
     return respuesta
 

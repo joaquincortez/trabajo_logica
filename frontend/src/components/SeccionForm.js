@@ -19,7 +19,7 @@ class SeccionForm extends React.Component{
   }
 
   AgregarOpcion(){
-    let nuevoInput = this.state.nuevosInputs.length + 3;
+    let nuevoInput = this.state.nuevosInputs.length;
     this.setState( prevState => ({nuevosInputs: prevState.nuevosInputs.concat([nuevoInput])}))
   }
 
@@ -49,7 +49,7 @@ class SeccionForm extends React.Component{
           </div>
         </div>
         <div>
-          {this.state.nuevosInputs.map(input => <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} key = {input.id} datos = {this.state.datos} nro = {this.state.nuevosInputs.length+3}/> )}
+          {this.state.nuevosInputs.map(input => <SeccionDato nombre={this.props.nombreTipo.replace(/\s/g, '').toLowerCase()} key = {input.id} datos = {this.state.datos} nro = {input}/> )}
         </div>
           <button type="button" className="btn btn-secondary" id="agregarSabor" onClick = {this.AgregarOpcion}><FontAwesomeIcon icon={faPlus}/> Agregar {this.props.nombreTipo}</button>
         </div>

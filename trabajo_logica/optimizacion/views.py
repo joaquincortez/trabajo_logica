@@ -40,7 +40,6 @@ def calculos_materia(request):
 
 def calculos(request):
     if request.method == 'POST':
-        print("ACAAAAAAAAAAAAA")
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
 
@@ -76,28 +75,34 @@ def calculos(request):
             print(" no validos es %s" %no_validos)
             print("no_validos[%s] es %s" %(i,no_validos[i]))
 
+        respuesta = {}
+        if(len(demandas) == 0):
+            respuesta["resultado"] = "fracaso"
+            respuesta["razon_fracaso"] = "materia_insuficiente"
+        else:
+            respuesta["resultado"] = "exito"
+            respuesta["no producidos"] = []
+            for idh in id_no_validos:
+                print("No es posible producir %s " %Helado.objects.get(pk=idh).nombre)
+                respuesta["no_producidos"].append(Helado.objects.get(pk=idh).nombre)
 
-        data = crear_modelo(precios,demandas, arreglo_mat_helado, disponibilidad,costos, nombres_helados)
-        respuesta = ""
-        for idh in id_no_validos:
-            print("No es posible producir %s " %Helado.objects.get(pk=idh).nombre)
-            respuesta += ("No es posible producir %s \n" %Helado.objects.get(pk=idh).nombre)
+            data = crear_modelo(precios,demandas, arreglo_mat_helado, disponibilidad,costos, nombres_helados)
 
-        print("minimizacion costos")
-        respuesta +="minimizacion costos"
-        respuesta +=str(minimizacion_costos(data))
-        print("maximizacion ganancias")
-        respuesta +="maximizacion ganancias"
-        respuesta +=str(maximizacion_ganancias(data))
-        print("maximizacion produccion")
-        respuesta +="maximizacion produccion"
-        respuesta +=str(maximizacion_produccion(data))
-        #QUEDA ELIMINAR LOS HELADOS PARA LOS QUE NO TENGO LAS MATERIAS PRIMAS E INFORMAR QUE NO SE PUEDE PRODUCIR
-        #PARA ESTO PIENSO QUE LO IDEAL SERIA UNA VEZ HECHOS TODOS LOS CALCULOS ANTERIORES,
-        #SE EVALUEN SI LAS MATERIAS DEL HELADO ESTAN CONTENIDAS EN LAS MATERIAS SELECCIONADAS
-        #SI NO LO ESTA SE ELIMINAN LOS DATOS, EN EL INDICE, DE CADA UNO DE LOS ARREGLOS.
-
-        return HttpResponse(respuesta)
+            if body["objetivo"] == "maximizarganancias":
+                print("maximizacion ganancias")
+                respuesta["optimizacion"] = maximizacion_ganancias(data)
+            elif body["objetivo"] == "maximizarproduccion":
+                print("maximizacion produccion")
+                respuesta["optimizacion"] =maximizacion_produccion(data)
+            elif body["objetivo"] == "minimizarcostos":
+                print("minimizacion costos")
+                respuesta["optimizacion"] =minimizacion_costos(data)
+            else:
+                respuesta["resultado"] = "fracaso"
+                respuesta["razon_fracaso"] = "opcion_no_disponible"
+            
+        print("\n\n\n RESPUESTA \n", respuesta)
+        return JsonResponse(respuesta)
 
 def scheduling(request):
     if request.method == 'POST':
